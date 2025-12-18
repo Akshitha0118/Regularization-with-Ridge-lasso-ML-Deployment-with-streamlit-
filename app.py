@@ -51,9 +51,11 @@ st.markdown(
 
 # ---------- LOAD & PREPROCESS DATA ----------
 data = pd.read_csv("car-mpg.csv")
+
 data = data.drop(['car_name'], axis=1)
 data['origin'] = data['origin'].replace({1: 'america', 2: 'europe', 3: 'asia'})
 data = pd.get_dummies(data, columns=['origin'], dtype=int)
+
 data = data.replace('?', np.nan)
 data = data.apply(pd.to_numeric)
 data = data.fillna(data.median())
@@ -72,6 +74,7 @@ lasso = Lasso(alpha=0.1).fit(x_train, y_train)
 
 # ---------- COEFFICIENTS ----------
 st.markdown("<div class='block'><h3>📌 Linear Regression Coefficients</h3></div>", unsafe_allow_html=True)
+
 coef_df = pd.DataFrame({
     "Feature": x_train.columns,
     "Coefficient": lin.coef_
@@ -96,14 +99,16 @@ scores = pd.DataFrame({
 })
 st.dataframe(scores)
 
-# ---------- OLS SUMMARY ----------
+# ---------- OLS SUMMARY (BOX FORMAT) ----------
 st.markdown("<div class='block'><h3>📈 OLS Regression Summary</h3></div>", unsafe_allow_html=True)
 
 X_ols = sm.add_constant(X.astype(float))
 y_ols = y.astype(float)
+
 ols_model = sm.OLS(y_ols, X_ols).fit()
 
-st.text(ols_model.summary())
+# Show summary in code-style box
+st.code(ols_model.summary().as_text(), language="text")
 
 # ---------- RESIDUAL PLOTS ----------
 st.markdown("<div class='block'><h3>📉 Residual Analysis</h3></div>", unsafe_allow_html=True)
@@ -128,3 +133,4 @@ ax3.set_xlabel("Actual MPG")
 ax3.set_ylabel("Predicted MPG")
 ax3.set_title("Actual vs Predicted MPG")
 st.pyplot(fig3)
+
