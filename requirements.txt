@@ -1,7 +1,7 @@
-pandas
 streamlit
+pandas
 numpy
-sklearn
 seaborn
-base64
 matplotlib
+scikit-learn
+statsmodels
